@@ -1,6 +1,6 @@
 "use client";
-import axios from "axios";
-import { ListChecks } from "lucide";
+
+// import { ListChecks } from "lucide";
 // import { List } from 'lucide-react';
 
 import { FcGoogle } from "react-icons/fc";
@@ -17,20 +17,23 @@ const Login = () => {
 
   const router = useRouter(); //next-nevigation wala router
 
-  //After singin strore data session inside
-  const session = useSession();
-  console.log(" session data =", session.data?.user);
+  //After singin store data session inside
+  // const session = useSession();
+  // console.log(" session data =", session.data?.user);
   //   console.log(session.data?.user);
 
   const handleSingIn = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault(); //preventDefault brouser ka default behavior hota hai jub jub summit button ko click karte
+    //  hai to page reload ho jata hai us default behaivior ko rokne ke liye use karte hai
     try {
       const result = await signIn("credentials", {
         email,
         password,
+        redirect: false,
       });
       console.log(result);
       toast.success("User logged in successfully!");
+      router.push("/");
     } catch (error) {
       console.log(error);
       toast.error("Please try again later.");
@@ -85,7 +88,12 @@ const Login = () => {
         </div>
         <button
           className="w-full flex items-center justify-center gap-2 py-2 px-2 border
-         border-gray-500 rounded-lg bg-white text-black hover:bg-gray-100 transition-colors"
+         border-gray-500 rounded-lg bg-white text-black hover:bg-gray-100 transition-colors
+         "
+          onClick={async () => {
+            await signIn("google", { callbackUrl: "/" });
+          
+          }}
         >
           <FcGoogle />
           <span>Sign in With Google</span>

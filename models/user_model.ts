@@ -4,7 +4,7 @@ interface Iuser{ //meaning Iuser interface hai user ka
 _id?:mongoose.Types.ObjectId,  //define id  object type  in mongoose genereted in mongodb
 name:string,
 image:string 
-password:string
+password?:string
 email:string
 createdAt?:Date,//define optional since mongodb define
 updatedAt?:Date
@@ -22,7 +22,9 @@ email:{
 },
 password:{
     type:String,
-    required:true,
+    // required:true,
+    // google me not required pass
+    required:false
     
 },
 image:{

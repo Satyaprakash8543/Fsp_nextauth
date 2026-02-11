@@ -1,5 +1,7 @@
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
+
 import connectDb from "./db";
 import User from "@/models/user_model";
 import bcrypt from "bcryptjs";
@@ -53,8 +55,31 @@ const authOptions: NextAuthOptions = {
         };
       },
     }),
+
+    // Login google
+
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!, //give me string
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
   ],
   callbacks: {
+    //signIn
+    async signIn({ account, user }) {
+      if (account?.provider == "google") {
+        await connectDb();
+        let existUser = await User.findOne({ email: user?.email });
+        if (!existUser) {
+          let existUser = await User.create({
+            name: user.name,
+            email: user?.email,
+          });
+        }
+        user.id = existUser._id as string;
+      }
+      return true
+    },
+
     //token generete
     // Store user details inside the token.
     //token is basicaly object hota hai
